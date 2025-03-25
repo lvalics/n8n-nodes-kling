@@ -7,6 +7,7 @@ import {
 	NodeOperationError,
 	NodeConnectionType,
 	IHttpRequestMethods,
+	JsonObject,
 } from 'n8n-workflow';
 
 export class KlingAI implements INodeType {
@@ -23,13 +24,20 @@ export class KlingAI implements INodeType {
 		},
 		inputs: [NodeConnectionType.Main],
 		outputs: [NodeConnectionType.Main],
-		credentials: [
-			{
-				name: 'klingAI',
-				required: true,
-			},
-		],
+		credentials: [],
 		properties: [
+			{
+				displayName: 'API Token',
+				name: 'apiToken',
+				type: 'string',
+				typeOptions: {
+					password: true,
+				},
+				default: '',
+				required: true,
+				description: 'JWT token for Kling AI API. Generate with header {"alg":"HS256","typ":"JWT"} and payload {"iss":"YOUR_ACCESS_KEY","exp":EXPIRATION_TIME,"nbf":NOT_BEFORE_TIME}. Don\'t include "Bearer" prefix.',
+				placeholder: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...',
+			},
 			{
 				displayName: 'Resource',
 				name: 'resource',
@@ -1381,27 +1389,29 @@ export class KlingAI implements INodeType {
 		],
 	};
 
+
 	async execute(this: IExecuteFunctions): Promise<INodeExecutionData[][]> {
 		const items = this.getInputData();
 		const returnData: INodeExecutionData[] = [];
-
-		// Get credentials for authorization
-		const credentials = await this.getCredentials('klingAI') as {
-			accessKey: string;
-		};
-
-		const { accessKey } = credentials;
-
-		// Set base API URL and headers
+		
+		// Set base API URL
 		const baseUrl = 'https://api.klingai.com';
-		const headers = {
-			'Content-Type': 'application/json',
-			'Authorization': `Bearer ${accessKey}`,
-		};
 
 		// Process each item
 		for (let i = 0; i < items.length; i++) {
 			try {
+				// Get API token from parameter
+				const apiToken = this.getNodeParameter('apiToken', i) as string;
+				
+				// Clean and format the token - remove any "Bearer " prefix if the user included it
+				const cleanToken = apiToken.trim().replace(/^Bearer\s+/i, '');
+				
+				// Set up headers with properly typed object
+				const headers: Record<string, string> = {
+					'Content-Type': 'application/json',
+					'Authorization': `Bearer ${cleanToken}`,
+				};
+				
 				const resource = this.getNodeParameter('resource', i) as string;
 				const operation = this.getNodeParameter('operation', i) as string;
 
@@ -1659,15 +1669,54 @@ export class KlingAI implements INodeType {
 					json: true,
 				};
 
-				responseData = await this.helpers.request(options);
+				try {
+					responseData = await this.helpers.request(options);
+					
+					// Validate response data
+					if (responseData === undefined) {
+						throw new NodeOperationError(this.getNode(), 'No response data received from Kling AI API');
+					}
 
-				returnData.push({
-					json: responseData,
-					pairedItem: {
-						item: i,
-					},
-				});
+					returnData.push({
+						json: responseData,
+						pairedItem: {
+							item: i,
+						},
+					});
+				} catch (error) {
+					// Handle API-specific errors
+					if (error.response?.body) {
+						const errorMessage = error.response.body.message || error.response.body.error || JSON.stringify(error.response.body);
+						
+						// Add more helpful message for auth errors
+						if (error.response.statusCode === 401) {
+							throw new NodeOperationError(
+								this.getNode(), 
+								`Kling AI API authentication failed: ${errorMessage}. Make sure your JWT token is valid and properly formatted according to Kling AI specifications.`, 
+								{ itemIndex: i }
+							);
+						}
+						
+						throw new NodeOperationError(this.getNode(), `Kling AI API error: ${errorMessage}`, { itemIndex: i });
+					}
+					
+					if (this.continueOnFail()) {
+						returnData.push({
+							json: {
+								error: error.message,
+								details: error.description || undefined,
+								statusCode: error.statusCode || undefined,
+							} as JsonObject,
+							pairedItem: {
+								item: i,
+							},
+						});
+						continue;
+					}
+					throw error;
+				}
 			} catch (error) {
+				// Handle any other errors
 				if (this.continueOnFail()) {
 					returnData.push({
 						json: {

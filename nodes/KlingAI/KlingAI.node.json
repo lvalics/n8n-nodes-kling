@@ -1,0 +1,18 @@
+{
+	"node": "n8n-nodes-useapi.useApi",
+	"nodeVersion": "1.0",
+	"codexVersion": "1.0",
+	"categories": ["Development", "Developer Tools"],
+	"resources": {
+		"credentialDocumentation": [
+			{
+				"url": "https://docs.qingque.cn/d/home/eZQCQxBrX8eeImjK6Ddz5iOi5?identityId=1oEG9JKKMFv"
+			}
+		],
+		"primaryDocumentation": [
+			{
+				"url": "http://klingai.com/"
+			}
+		]
+	}
+}

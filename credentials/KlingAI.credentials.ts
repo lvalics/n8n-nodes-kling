@@ -11,29 +11,14 @@ export class KlingAI implements ICredentialType {
 	documentationUrl = 'https://docs.qingque.cn/d/home/eZQA6m4cRjTB1BBiE5eJ4lyvL?identityId=1oEG9JKKMFv';
 	properties: INodeProperties[] = [
 		{
-			displayName: 'Access Key',
-			name: 'accessKey',
+			displayName: 'API Token',
+			name: 'apiToken',
 			type: 'string',
 			default: '',
 			required: true,
-			description: 'The Access Key for the Kling AI API',
-		},
-		{
-			displayName: 'Secret Key',
-			name: 'secretKey',
-			type: 'string',
-			default: '',
-			required: true,
-			typeOptions: {
-				password: true,
-			},
-			description: 'The Secret Key for the Kling AI API',
+			description: 'JWT token for Kling AI API. Must be generated according to Kling AI specifications with proper header {"alg":"HS256","typ":"JWT"} and payload {"iss":"YOUR_ACCESS_KEY","exp":EXPIRATION_TIME,"nbf":NOT_BEFORE_TIME}.',
 		},
 	];
-
-	// JWT token will be generated in the node during execution
-	// This is because JWT tokens must be freshly generated for each request
-	// with proper expiration times per the API documentation
 
 	authenticate: IAuthenticateGeneric = {
 		type: 'generic',
@@ -41,6 +26,7 @@ export class KlingAI implements ICredentialType {
 			headers: {
 				'Content-Type': 'application/json',
 				'Accept': 'application/json',
+				'Authorization': '=Bearer {{$credentials.apiToken.trim().replace(/^Bearer\\s+/i, "")}}',
 			},
 		},
 	};
@@ -51,8 +37,8 @@ export class KlingAI implements ICredentialType {
 			url: '/account/costs',
 			method: 'GET',
 			qs: {
-				start_time: '={{Date.now() - 24 * 60 * 60 * 1000}}',
-				end_time: '={{Date.now()}}',
+				start_time: Date.now() - 24 * 60 * 60 * 1000,
+				end_time: Date.now(),
 			},
 		},
 	};
