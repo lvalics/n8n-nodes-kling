@@ -1717,17 +1717,34 @@ export class KlingAI implements INodeType {
 						const taskId = this.getNodeParameter('taskId', i, '') as string;
 						const externalTaskId = this.getNodeParameter('externalTaskId', i, '') as string;
 
+						// Special handling for endpoints that use hyphen instead of camelCase
+						let formattedType = videoType;
+						if (videoType === 'lipSync') {
+							formattedType = 'lip-sync';
+						} else if (videoType === 'videoExtend') {
+							formattedType = 'video-extend';
+						}
+
 						if (taskId) {
-							endpoint = `/v1/videos/${videoType}/${taskId}`;
+							endpoint = `/v1/videos/${formattedType}/${taskId}`;
 						} else if (externalTaskId) {
-							endpoint = `/v1/videos/${videoType}/${externalTaskId}`;
+							endpoint = `/v1/videos/${formattedType}/${externalTaskId}`;
 						} else {
 							throw new NodeOperationError(this.getNode(), 'Either Task ID or External Task ID must be provided');
 						}
 					} else if (operation === 'list') {
 						// List videos
 						const videoType = this.getNodeParameter('videoType', i) as string;
-						endpoint = `/v1/videos/${videoType}`;
+						
+						// Special handling for endpoints that use hyphen instead of camelCase
+						let formattedType = videoType;
+						if (videoType === 'lipSync') {
+							formattedType = 'lip-sync';
+						} else if (videoType === 'videoExtend') {
+							formattedType = 'video-extend';
+						}
+						
+						endpoint = `/v1/videos/${formattedType}`;
 
 						const additionalOptions = this.getNodeParameter('additionalOptions', i, {}) as IDataObject;
 
