@@ -1,7 +1,5 @@
 > **Currently in BETA and under active development.**
 
-![Banner image](https://user-images.githubusercontent.com/10284570/XXX.png)
-
 # n8n-nodes-kling
 
 This n8n community node enables seamless integration of **[Kling AI](https://klimgai.com) in your [n8n](https://n8n.io) workflows**.

@@ -242,6 +242,9 @@ export class KlingAI implements INodeType {
 				name: 'prompt',
 				type: 'string',
 				required: true,
+				typeOptions: {
+					rows: 4,
+				},
 				displayOptions: {
 					show: {
 						resource: [
@@ -260,6 +263,9 @@ export class KlingAI implements INodeType {
 				name: 'negativePrompt',
 				type: 'string',
 				required: false,
+				typeOptions: {
+					rows: 4,
+				},
 				displayOptions: {
 					show: {
 						resource: [
@@ -504,6 +510,9 @@ export class KlingAI implements INodeType {
 				name: 'prompt',
 				type: 'string',
 				required: true,
+				typeOptions: {
+					rows: 4,
+				},
 				displayOptions: {
 					show: {
 						resource: [
@@ -592,6 +601,9 @@ export class KlingAI implements INodeType {
 						displayName: 'Negative Prompt',
 						name: 'negativePrompt',
 						type: 'string',
+						typeOptions: {
+							rows: 4,
+						},
 						default: '',
 						description: 'The negative prompt to avoid in generation',
 					},
@@ -727,6 +739,9 @@ export class KlingAI implements INodeType {
 				displayName: 'Prompt',
 				name: 'prompt',
 				type: 'string',
+				typeOptions: {
+					rows: 4,
+				},
 				displayOptions: {
 					show: {
 						resource: [
@@ -795,6 +810,9 @@ export class KlingAI implements INodeType {
 						displayName: 'Negative Prompt',
 						name: 'negativePrompt',
 						type: 'string',
+						typeOptions: {
+							rows: 4,
+						},
 						default: '',
 						description: 'The negative prompt to avoid in generation',
 					},
@@ -935,6 +953,9 @@ export class KlingAI implements INodeType {
 				name: 'text',
 				type: 'string',
 				required: true,
+				typeOptions: {
+					rows: 4,
+				},
 				displayOptions: {
 					show: {
 						resource: [
