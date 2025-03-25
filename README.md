@@ -2,7 +2,7 @@
 
 # n8n-nodes-kling
 
-This n8n community node enables seamless integration of **[Kling AI](https://klimgai.com) in your [n8n](https://n8n.io) workflows**.
+This n8n community node enables seamless integration of **[Kling AI](https://klingai.com) in your [n8n](https://n8n.io) workflows**.
 
 ## Features
 
