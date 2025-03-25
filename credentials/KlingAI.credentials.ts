@@ -8,7 +8,7 @@ import {
 export class KlingAI implements ICredentialType {
 	name = 'klingAI';
 	displayName = 'Kling AI API';
-	documentationUrl = 'https://docs.qingque.cn/d/home/eZQCQxBrX8eeImjK6Ddz5iOi5?identityId=1oEG9JKKMFv';
+	documentationUrl = 'https://docs.qingque.cn/d/home/eZQA6m4cRjTB1BBiE5eJ4lyvL?identityId=1oEG9JKKMFv';
 	properties: INodeProperties[] = [
 		{
 			displayName: 'Access Key',

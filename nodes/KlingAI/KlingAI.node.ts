@@ -1,12 +1,13 @@
-import { IExecuteFunctions } from 'n8n-core';
 import {
+	IExecuteFunctions,
 	INodeType,
 	INodeTypeDescription,
 	IDataObject,
 	INodeExecutionData,
 	NodeOperationError,
+	NodeConnectionType,
+	IHttpRequestMethods,
 } from 'n8n-workflow';
-import * as jwt from 'jsonwebtoken';
 
 export class KlingAI implements INodeType {
 	description: INodeTypeDescription = {
@@ -20,8 +21,8 @@ export class KlingAI implements INodeType {
 		defaults: {
 			name: 'Kling AI',
 		},
-		inputs: ['main'],
-		outputs: ['main'],
+		inputs: [NodeConnectionType.Main],
+		outputs: [NodeConnectionType.Main],
 		credentials: [
 			{
 				name: 'klingAI',
@@ -1384,41 +1385,18 @@ export class KlingAI implements INodeType {
 		const items = this.getInputData();
 		const returnData: INodeExecutionData[] = [];
 
-		// Generate JWT token for authorization
+		// Get credentials for authorization
 		const credentials = await this.getCredentials('klingAI') as {
 			accessKey: string;
-			secretKey: string;
 		};
 
-		const { accessKey, secretKey } = credentials;
-
-		// Generate JWT token as per Kling AI documentation
-		const generateToken = () => {
-			const now = Math.floor(Date.now() / 1000);
-			const payload = {
-				iss: accessKey,
-				exp: now + 1800, // valid for 30 minutes
-				nbf: now - 5, // valid from 5 seconds ago
-			};
-
-			const options = {
-				algorithm: 'HS256',
-				header: {
-					alg: 'HS256',
-					typ: 'JWT',
-				},
-			};
-
-			return jwt.sign(payload, secretKey, options);
-		};
-
-		const token = generateToken();
+		const { accessKey } = credentials;
 
 		// Set base API URL and headers
 		const baseUrl = 'https://api.klingai.com';
 		const headers = {
 			'Content-Type': 'application/json',
-			'Authorization': `Bearer ${token}`,
+			'Authorization': `Bearer ${accessKey}`,
 		};
 
 		// Process each item
@@ -1673,7 +1651,7 @@ export class KlingAI implements INodeType {
 				let responseData;
 
 				const options = {
-					method,
+					method: method as IHttpRequestMethods,
 					url: baseUrl + endpoint,
 					headers,
 					qs,
