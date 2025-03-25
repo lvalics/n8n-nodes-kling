@@ -367,7 +367,7 @@ export class KlingAI implements INodeType {
 						name: 'image',
 						type: 'string',
 						default: '',
-						description: 'URL or Base64-encoded image to use as reference',
+						description: 'URL or Base64-encoded image to use as reference. When using kling-v1-5 model, you must also specify Image Reference Type.',
 					},
 					{
 						displayName: 'Image Reference Type',
@@ -375,16 +375,16 @@ export class KlingAI implements INodeType {
 						type: 'options',
 						options: [
 							{
-								name: 'Subject',
+								name: 'Subject (Character Feature Reference)',
 								value: 'subject',
 							},
 							{
-								name: 'Face',
+								name: 'Face (Character Appearance Reference)',
 								value: 'face',
 							},
 						],
 						default: 'subject',
-						description: 'Type of image reference',
+						description: 'Type of image reference. REQUIRED when using reference image, especially for kling-v1-5 model. For face reference, the uploaded image must contain only one face.',
 					},
 					{
 						displayName: 'Image Fidelity',
@@ -1447,10 +1447,18 @@ export class KlingAI implements INodeType {
 
 						if (additionalOptions.image) {
 							body.image = additionalOptions.image;
+							
+							// If the image is provided, ensure image_reference is also set
+							if (!additionalOptions.imageReference) {
+								// Default to 'subject' if not specified (especially important for v1-5 model)
+								body.image_reference = 'subject';
+							} else {
+								body.image_reference = additionalOptions.imageReference;
+							}
 						}
-
-						if (additionalOptions.imageReference) {
-							body.image_reference = additionalOptions.imageReference;
+						else if (additionalOptions.imageReference) {
+							// If imageReference is set but no image is provided, add a warning
+							this.logger.warn('Image Reference Type is set but no Reference Image is provided. This may cause an error.');
 						}
 
 						if (additionalOptions.imageFidelity !== undefined) {
