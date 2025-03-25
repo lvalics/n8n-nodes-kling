@@ -952,27 +952,6 @@ export class KlingAI implements INodeType {
 				description: 'Text content for lip sync',
 			},
 			{
-				displayName: 'Voice ID',
-				name: 'voiceId',
-				type: 'string',
-				required: true,
-				displayOptions: {
-					show: {
-						resource: [
-							'video',
-						],
-						operation: [
-							'lipSync',
-						],
-						inputType: [
-							'text2video',
-						],
-					},
-				},
-				default: '',
-				description: 'Voice ID for speech synthesis',
-			},
-			{
 				displayName: 'Voice Language',
 				name: 'voiceLanguage',
 				type: 'options',
@@ -1002,6 +981,122 @@ export class KlingAI implements INodeType {
 				],
 				default: 'zh',
 				description: 'Language of the voice',
+			},
+			{
+				displayName: 'Voice ID',
+				name: 'voiceId',
+				type: 'options',
+				required: true,
+				displayOptions: {
+					show: {
+						resource: [
+							'video',
+						],
+						operation: [
+							'lipSync',
+						],
+						inputType: [
+							'text2video',
+						],
+						voiceLanguage: [
+							'zh', // Only show Chinese voices when Chinese is selected
+						],
+					},
+				},
+				options: [
+					// Chinese voices from the CSV
+					{ name: '阳光少年 (Sunny Boy)', value: 'genshin_vindi2' },
+					{ name: '懂事小弟 (Sage)', value: 'zhinen_xuesheng' },
+					{ name: '运动少年 (Sporty Boy)', value: 'tiyuxi_xuedi' },
+					{ name: '青春少女 (Youthful Girl)', value: 'ai_shatang' },
+					{ name: '温柔小妹 (Gentle Sister)', value: 'genshin_klee2' },
+					{ name: '元气少女 (Energetic Girl)', value: 'genshin_kirara' },
+					{ name: '阳光男生 (Sunny Young Man)', value: 'ai_kaiya' },
+					{ name: '幽默小哥 (Humorous Guy)', value: 'tiexin_nanyou' },
+					{ name: '文艺小哥 (Artsy Guy)', value: 'ai_chenjiahao_712' },
+					{ name: '甜美邻家 (Sweet Neighbor)', value: 'girlfriend_1_speech02' },
+					{ name: '温柔姐姐 (Gentle Big Sister)', value: 'chat1_female_new-3' },
+					{ name: '职场女青 (Professional Woman)', value: 'girlfriend_2_speech02' },
+					{ name: '活泼男童 (Lively Boy)', value: 'cartoon-boy-07' },
+					{ name: '俏皮女童 (Playful Girl)', value: 'cartoon-girl-01' },
+					{ name: '稳重老爸 (Steady Father)', value: 'ai_huangyaoshi_712' },
+					{ name: '温柔妈妈 (Gentle Mother)', value: 'you_pingjing' },
+					{ name: '严肃上司 (Serious Boss)', value: 'ai_laoguowang_712' },
+					{ name: '优雅贵妇 (Elegant Lady)', value: 'chengshu_jiejie' },
+					{ name: '慈祥爷爷 (Kind Grandfather)', value: 'zhuxi_speech02' },
+					{ name: '唠叨爷爷 (Chatty Grandfather)', value: 'uk_oldman3' },
+					{ name: '唠叨奶奶 (Chatty Grandmother)', value: 'laopopo_speech02' },
+					{ name: '和蔼奶奶 (Kind Grandmother)', value: 'heainainai_speech02' },
+					{ name: '东北老铁 (Northeastern Friend)', value: 'dongbeilaotie_speech02' },
+					{ name: '重庆小伙 (Chongqing Guy)', value: 'chongqingxiaohuo_speech02' },
+					{ name: '四川妹子 (Sichuan Girl)', value: 'chuanmeizi_speech02' },
+					{ name: '潮汕大叔 (Chaoshan Uncle)', value: 'chaoshandashu_speech02' },
+					{ name: '台湾男生 (Taiwan Guy)', value: 'ai_taiwan_man2_speech02' },
+					{ name: '西安掌柜 (Xi\'an Manager)', value: 'xianzhanggui_speech02' },
+					{ name: '天津姐姐 (Tianjin Sister)', value: 'tianjinjiejie_speech02' },
+					{ name: '新闻播报男 (News Anchor Male)', value: 'diyinnansang_DB_CN_M_04-v2' },
+					{ name: '译制片男 (Film Dubbing Male)', value: 'yizhipiannan-v1' },
+					{ name: '元气少女 (Energetic Girl 2)', value: 'guanxiaofang-v2' },
+					{ name: '撒娇女友 (Coquettish Girlfriend)', value: 'tianmeixuemei-v1' },
+					{ name: '刀片烟嗓 (Raspy Voice)', value: 'daopianyansang-v1' },
+					{ name: '乖巧正太 (Well-behaved Boy)', value: 'mengwa-v1' },
+				],
+				default: 'genshin_vindi2',
+				description: 'Select a Chinese voice for speech synthesis',
+			},
+			{
+				displayName: 'Voice ID',
+				name: 'voiceId',
+				type: 'options',
+				required: true,
+				displayOptions: {
+					show: {
+						resource: [
+							'video',
+						],
+						operation: [
+							'lipSync',
+						],
+						inputType: [
+							'text2video',
+						],
+						voiceLanguage: [
+							'en', // Only show English voices when English is selected
+						],
+					},
+				},
+				options: [
+					// English voices from the CSV
+					{ name: 'Sunny', value: 'genshin_vindi2' },
+					{ name: 'Sage', value: 'zhinen_xuesheng' },
+					{ name: 'Ace', value: 'AOT' },
+					{ name: 'Blossom', value: 'ai_shatang' },
+					{ name: 'Peppy', value: 'genshin_klee2' },
+					{ name: 'Dove', value: 'genshin_kirara' },
+					{ name: 'Shine', value: 'ai_kaiya' },
+					{ name: 'Anchor', value: 'oversea_male1' },
+					{ name: 'Lyric', value: 'ai_chenjiahao_712' },
+					{ name: 'Melody', value: 'girlfriend_4_speech02' },
+					{ name: 'Tender', value: 'chat1_female_new-3' },
+					{ name: 'Siren', value: 'chat_0407_5-1' },
+					{ name: 'Zippy', value: 'cartoon-boy-07' },
+					{ name: 'Bud', value: 'uk_boy1' },
+					{ name: 'Sprite', value: 'cartoon-girl-01' },
+					{ name: 'Candy', value: 'PeppaPig_platform' },
+					{ name: 'Beacon', value: 'ai_huangzhong_712' },
+					{ name: 'Rock', value: 'ai_huangyaoshi_712' },
+					{ name: 'Titan', value: 'ai_laoguowang_712' },
+					{ name: 'Grace', value: 'chengshu_jiejie' },
+					{ name: 'Helen', value: 'you_pingjing' },
+					{ name: 'Lore', value: 'calm_story1' },
+					{ name: 'Crag', value: 'uk_man2' },
+					{ name: 'Prattle', value: 'laopopo_speech02' },
+					{ name: 'Hearth', value: 'laopopo_speech02' },
+					{ name: 'The Reader', value: 'reader_en_m-v1' },
+					{ name: 'Commercial Lady', value: 'commercial_lady_en_f-v1' },
+				],
+				default: 'genshin_vindi2',
+				description: 'Select an English voice for speech synthesis',
 			},
 			{
 				displayName: 'Voice Speed',
